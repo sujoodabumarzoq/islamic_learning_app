@@ -1,0 +1,26 @@
+[
+  {
+    "title": "قصة آدم عليه السلام",
+    "difficulty": "سهلة",
+    "isCompleted": true,
+    "content": "كان آدم عليه السلام أول خلق الله من البشر...",
+   "audio": "assets/audio/adam.mp3",
+   "animation": "assets/animations/adam.json",
+    "interactiveButtons": [
+      {"text": "اضغط لمعرفة المزيد", "action": "more_info"},
+      {"text": "اضغط لرؤية حدث", "action": "show_event"}
+    ]
+  },
+  {
+    "title": "قصة نوح عليه السلام",
+    "difficulty": "متوسطة",
+    "isCompleted": false,
+    "content": "كان نوح عليه السلام نبيًا صابرًا...",
+   "audio": "assets/audio/noah.mp3",
+    "animation": "assets/animations/noah.json",
+    "interactiveButtons": [
+      {"text": "اضغط لمعرفة المزيد", "action": "more_info"},
+      {"text": "اضغط لرؤية حدث", "action": "show_event"}
+    ]
+  }
+]
