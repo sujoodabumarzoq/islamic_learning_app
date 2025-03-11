@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:islamic_learning_app/Model/UserModel.dart';
 import 'package:islamic_learning_app/screen/Features/user/LoginScreen.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -10,9 +11,10 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
-  String fullName = '';
-  String email = '';
-  String password = '';
+
+  UserModel user = UserModel(fullName: '', email: '', password: '');
+
+
   String confirmPassword = '';
   bool passwordVisible = false;
   bool termsAccepted = false;
@@ -21,9 +23,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void _submit() {
     if (_formKey.currentState!.validate()) {
       // هنا يمكنك إضافة الكود لإرسال البيانات إلى الخادم
-      print('Full Name: $fullName');
-      print('Email: $email');
-      print('Password: $password');
+      print('Full Name:  ${user.fullName}');
+      print('Email: ${user.email}');
+      print('Password: ${user.password}');
       // إضافة المزيد من المعالجة هنا
     }
   }
@@ -97,9 +99,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         }
                         return null;
                       },
-                      onChanged: (value) {
-                        fullName = value;
-                      },
+
+    onChanged: (value) {
+    user.fullName = value;
+    },
                     ),
                     const SizedBox(height: 16),
 
@@ -123,7 +126,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         return null;
                       },
                       onChanged: (value) {
-                        email = value;
+                        user.email = value;
                       },
                     ),
                     const SizedBox(height: 16),
@@ -161,7 +164,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         return null;
                       },
                       onChanged: (value) {
-                        password = value;
+                        user.password = value;
                       },
                     ),
                     const SizedBox(height: 16),
@@ -179,7 +182,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       obscureText: true,
                       validator: (value) {
-                        if (value != password) {
+                        if (value != user.password) {
                           return 'كلمتا المرور غير متطابقتين';
                         }
                         return null;

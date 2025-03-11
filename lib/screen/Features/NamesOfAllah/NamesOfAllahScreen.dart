@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:islamic_learning_app/screen/Features/NamesOfAllah/NamesList.dart';
-import 'package:flutter/material.dart';
-import 'package:islamic_learning_app/screen/Features/NamesOfAllah/NamesList.dart';
-
-import 'package:flutter/material.dart';
+import 'package:islamic_learning_app/Model/NamesGroup.dart';
 import 'package:islamic_learning_app/screen/Features/NamesOfAllah/NamesList.dart';
 
 class NamesOfAllahScreen extends StatefulWidget {
@@ -14,37 +10,34 @@ class NamesOfAllahScreen extends StatefulWidget {
 }
 
 class _NamesOfAllahScreenState extends State<NamesOfAllahScreen> {
-  // قوائم الأسماء للمجموعات
-  final List<String> group1Names = [
-    "الرحمن", "الرحيم", "الملك", "القدوس", "السلام", "المؤمن", "المهيمن", "العزيز", "الجبار", "المتكبر",
-  ];
-  final List<String> group2Names = [
-    "الخالق", "البارئ", "المصور", "الغفار", "القهار", "الوهاب", "الرزاق", "الفتاح", "العليم", "القابض",
-  ];
-  final List<String> group3Names = [
-    "الباسط", "الخافض", "الرافع", "المعز", "المذل", "السميع", "البصير", "الحكم", "العدل", "اللطيف",
+  // قوائم الأسماء
+  final List<NamesGroup> groups = [
+    NamesGroup(groupName: "المجموعة 1", names: [
+      "الرحمن", "الرحيم", "الملك", "القدوس", "السلام", "المؤمن", "المهيمن", "العزيز", "الجبار", "المتكبر",
+    ]),
+    NamesGroup(groupName: "المجموعة 2", names: [
+      "الخالق", "البارئ", "المصور", "الغفار", "القهار", "الوهاب", "الرزاق", "الفتاح", "العليم", "القابض",
+    ]),
+    NamesGroup(groupName: "المجموعة 3", names: [
+      "الباسط", "الخافض", "الرافع", "المعز", "المذل", "السميع", "البصير", "الحكم", "العدل", "اللطيف",
+    ]),
   ];
 
-  TextEditingController searchController = TextEditingController(); // تحكم لحقل البحث
+  TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3, // عدد المجموعات
+      length: groups.length, // استخدام عدد المجموعات من Model
       child: Scaffold(
         appBar: AppBar(
           title: const Text("أسماء الله الحسنى"),
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: "المجموعة 1"),
-              Tab(text: "المجموعة 2"),
-              Tab(text: "المجموعة 3"),
-            ],
+          bottom: TabBar(
+            tabs: groups.map((group) => Tab(text: group.groupName)).toList(), // استخدام البيانات من Model
           ),
         ),
         body: Column(
           children: [
-            // حقل البحث
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: TextField(
@@ -57,21 +50,15 @@ class _NamesOfAllahScreenState extends State<NamesOfAllahScreen> {
                   ),
                 ),
                 onChanged: (value) {
-                  setState(() {}); // تحديث الواجهة عند تغيير النص
+                  setState(() {});
                 },
               ),
             ),
-            // عرض الأسماء في TabBarView
             Expanded(
               child: TabBarView(
-                children: [
-                  // قائمة الأسماء للمجموعة 1 مع البحث
-                  NamesList(names: group1Names, searchQuery: searchController.text),
-                  // قائمة الأسماء للمجموعة 2 مع البحث
-                  NamesList(names: group2Names, searchQuery: searchController.text),
-                  // قائمة الأسماء للمجموعة 3 مع البحث
-                  NamesList(names: group3Names, searchQuery: searchController.text),
-                ],
+                children: groups.map((group) {
+                  return NamesList(names: group.names, searchQuery: searchController.text);
+                }).toList(),
               ),
             ),
           ],
@@ -80,3 +67,4 @@ class _NamesOfAllahScreenState extends State<NamesOfAllahScreen> {
     );
   }
 }
+

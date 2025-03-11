@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import 'package:islamic_learning_app/screen/Features/story/story.dart';
+import 'package:islamic_learning_app/Model/story.dart';
 
 import 'StoryCard.dart';
 
@@ -80,104 +80,3 @@ class StoriesScreen extends StatelessWidget {
   }
 }
 
-// class Story {
-//   final String title;
-//   final String difficulty;
-//   final bool isCompleted;
-//   final String content;
-//   final String audio; // إضافة خاصية audio
-//   final String animation; // إضافة خاصية animation
-//   final List<Map<String, String>> interactiveButtons; // إضافة خاصية interactiveButtons
-//
-//   Story({
-//     required this.title,
-//     required this.difficulty,
-//     required this.isCompleted,
-//     required this.content,
-//     required this.audio,
-//     required this.animation,
-//     required this.interactiveButtons,
-//   });
-//
-//   factory Story.fromJson(Map<String, dynamic> json) {
-//     return Story(
-//       title: json['title'],
-//       difficulty: json['difficulty'],
-//       isCompleted: json['isCompleted'],
-//       content: json['content'],
-//       audio: json['audio'],
-//       animation: json['animation'],
-//       interactiveButtons: List<Map<String, String>>.from(json['interactiveButtons']),
-//     );
-//   }
-// }
-// class StoryCard extends StatelessWidget {
-//   final Story story;
-//
-//   const StoryCard({Key? key, required this.story}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Card(
-//       elevation: 4,
-//       margin: const EdgeInsets.only(bottom: 16),
-//       shape: RoundedRectangleBorder(
-//         borderRadius: BorderRadius.circular(10),
-//       ),
-//       child: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Row(
-//               children: [
-//                 Icon(
-//                   Icons.book, // أيقونة تمثل القصة
-//                   size: 40,
-//                   color: Colors.blue,
-//                 ),
-//                 const SizedBox(width: 16),
-//                 Expanded(
-//                   child: Text(
-//                     story.title,
-//                     style: const TextStyle(
-//                       fontSize: 20,
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//             const SizedBox(height: 8),
-//             Row(
-//               children: [
-//                 const Icon(Icons.star, color: Colors.amber, size: 16),
-//                 const SizedBox(width: 4),
-//                 Text(
-//                   "صعوبة: ${story.difficulty}",
-//                   style: const TextStyle(fontSize: 16),
-//                 ),
-//               ],
-//             ),
-//             if (story.isCompleted)
-//               Container(
-//                 margin: const EdgeInsets.only(top: 8),
-//                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-//                 decoration: BoxDecoration(
-//                   color: Colors.green[50],
-//                   borderRadius: BorderRadius.circular(10),
-//                 ),
-//                 child: const Text(
-//                   "مكتملة",
-//                   style: TextStyle(
-//                     color: Colors.green,
-//                     fontWeight: FontWeight.bold,
-//                   ),
-//                 ),
-//               ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

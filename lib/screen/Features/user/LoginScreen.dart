@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:islamic_learning_app/Model/UserModel.dart';
 import 'SignUpScreen.dart'; // تأكد من استيراد صفحة إنشاء الحساب
 
 class LoginScreen extends StatefulWidget {
@@ -10,15 +11,15 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  String email = '';
-  String password = '';
+
   bool passwordVisible = false;
+  UserModel user = UserModel( email: '', password: '');
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
       // هنا يمكنك إضافة الكود لتسجيل الدخول
-      print('Email: $email');
-      print('Password: $password');
+      print('Email: ${user.email}');
+      print('Password: ${user.password}');
       // إضافة المزيد من المعالجة هنا
     }
   }
@@ -100,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         return null;
                       },
                       onChanged: (value) {
-                        email = value;
+                        user.email = value;
                       },
                     ),
                     const SizedBox(height: 16),
@@ -136,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         return null;
                       },
                       onChanged: (value) {
-                        password = value;
+                        user.password = value;
                       },
                     ),
                     const SizedBox(height: 16),

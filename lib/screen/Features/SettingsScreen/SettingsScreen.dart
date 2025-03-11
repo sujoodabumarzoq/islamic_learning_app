@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:islamic_learning_app/Model/Settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
-
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  // متغيرات حالة الإعدادات
-  bool isSoundEnabled = true;
-  double volumeLevel = 0.7;
-  String selectedBackground = 'default';
-  String fontSize = 'medium';
-  bool areNotificationsEnabled = true;
+  // متغير لتخزين الإعدادات
+  late Settings settings;
 
-  // خيارات الخلفيات المتاحة
   final List<Map<String, dynamic>> backgroundOptions = [
     {'id': 'default', 'name': 'الخلفية الافتراضية', 'color': Colors.white},
     {'id': 'light_blue', 'name': 'أزرق فاتح', 'color': Colors.lightBlue[50]},
@@ -25,7 +20,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     {'id': 'beige', 'name': 'بيج', 'color': const Color(0xFFF5F5DC)},
   ];
 
-  // خيارات أحجام الخط
   final Map<String, double> fontSizeOptions = {
     'small': 14.0,
     'medium': 16.0,
@@ -42,22 +36,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
   _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      isSoundEnabled = prefs.getBool('isSoundEnabled') ?? true;
-      volumeLevel = prefs.getDouble('volumeLevel') ?? 0.7;
-      selectedBackground = prefs.getString('selectedBackground') ?? 'default';
-      fontSize = prefs.getString('fontSize') ?? 'medium';
-      areNotificationsEnabled = prefs.getBool('areNotificationsEnabled') ?? true;
+      settings = Settings(
+        isSoundEnabled: prefs.getBool('isSoundEnabled') ?? true,
+        volumeLevel: prefs.getDouble('volumeLevel') ?? 0.7,
+        selectedBackground: prefs.getString('selectedBackground') ?? 'default',
+        fontSize: prefs.getString('fontSize') ?? 'medium',
+        areNotificationsEnabled: prefs.getBool('areNotificationsEnabled') ?? true,
+      );
     });
   }
 
   // حفظ الإعدادات
   _saveSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isSoundEnabled', isSoundEnabled);
-    await prefs.setDouble('volumeLevel', volumeLevel);
-    await prefs.setString('selectedBackground', selectedBackground);
-    await prefs.setString('fontSize', fontSize);
-    await prefs.setBool('areNotificationsEnabled', areNotificationsEnabled);
+    await prefs.setBool('isSoundEnabled', settings.isSoundEnabled);
+    await prefs.setDouble('volumeLevel', settings.volumeLevel);
+    await prefs.setString('selectedBackground', settings.selectedBackground);
+    await prefs.setString('fontSize', settings.fontSize);
+    await prefs.setBool('areNotificationsEnabled', settings.areNotificationsEnabled);
   }
 
   // فتح رابط التقييم
@@ -88,10 +84,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildSectionTitle('التحكم في الصوت'),
             SwitchListTile(
               title: const Text('تشغيل الصوت'),
-              value: isSoundEnabled,
+              value: settings.isSoundEnabled,
               onChanged: (value) {
                 setState(() {
-                  isSoundEnabled = value;
+                  settings.isSoundEnabled = value;
                   _saveSettings();
                 });
               },
@@ -104,11 +100,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const Icon(Icons.volume_down, size: 20),
                   Expanded(
                     child: Slider(
-                      value: volumeLevel,
-                      onChanged: isSoundEnabled
+                      value: settings.volumeLevel,
+                      onChanged: settings.isSoundEnabled
                           ? (value) {
                         setState(() {
-                          volumeLevel = value;
+                          settings.volumeLevel = value;
                           _saveSettings();
                         });
                       }
@@ -148,10 +144,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildSectionTitle('الإشعارات'),
             SwitchListTile(
               title: const Text('تفعيل الإشعارات'),
-              value: areNotificationsEnabled,
+              value: settings.areNotificationsEnabled,
               onChanged: (value) {
                 setState(() {
-                  areNotificationsEnabled = value;
+                  settings.areNotificationsEnabled = value;
                   _saveSettings();
                 });
               },
@@ -239,7 +235,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           return GestureDetector(
             onTap: () {
               setState(() {
-                selectedBackground = option['id'];
+                settings.selectedBackground = option['id'];
                 _saveSettings();
               });
             },
@@ -249,10 +245,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               decoration: BoxDecoration(
                 color: option['color'],
                 border: Border.all(
-                  color: selectedBackground == option['id']
+                  color: settings.selectedBackground == option['id']
                       ? Colors.blue
                       : Colors.grey,
-                  width: selectedBackground == option['id'] ? 3 : 1,
+                  width: settings.selectedBackground == option['id'] ? 3 : 1,
                 ),
                 borderRadius: BorderRadius.circular(8.0),
               ),
@@ -262,7 +258,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 10,
-                    fontWeight: selectedBackground == option['id']
+                    fontWeight: settings.selectedBackground == option['id']
                         ? FontWeight.bold
                         : FontWeight.normal,
                   ),
@@ -280,24 +276,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return ElevatedButton(
       onPressed: () {
         setState(() {
-          fontSize = size;
+          settings.fontSize = size;
           _saveSettings();
         });
       },
       style: ElevatedButton.styleFrom(
-        primary: fontSize == size ? Colors.blue : Colors.grey[300],
+        primary: settings.fontSize == size ? Colors.blue : Colors.grey[300],
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       ),
       child: Text(
         label,
         style: TextStyle(
           fontSize: fontSizeOptions[size],
-          color: fontSize == size ? Colors.white : Colors.black,
+          color: settings.fontSize == size ? Colors.white : Colors.black,
         ),
       ),
     );
   }
 }
-
-
-

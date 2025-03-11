@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:islamic_learning_app/screen/Features/story/story.dart';
+import 'package:islamic_learning_app/Model/story.dart';
 import 'package:islamic_learning_app/screen/Features/story/story_detail_screen.dart';
 import 'StoriesScreen.dart';
 
