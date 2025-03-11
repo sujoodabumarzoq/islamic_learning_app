@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:islamic_learning_app/Model/UserModel.dart';
+import 'package:islamic_learning_app/repositories/auth_repository.dart';
+import 'package:islamic_learning_app/screen/Features/home/HomePage.dart';
 import 'package:islamic_learning_app/screen/Features/user/LoginScreen.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -11,22 +14,45 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
+  final AuthRepository _authRepository = AuthRepository();
 
   UserModel user = UserModel(fullName: '', email: '', password: '');
-
-
   String confirmPassword = '';
   bool passwordVisible = false;
   bool termsAccepted = false;
 
   // دالة للتحقق من صحة المدخلات
-  void _submit() {
-    if (_formKey.currentState!.validate()) {
-      // هنا يمكنك إضافة الكود لإرسال البيانات إلى الخادم
-      print('Full Name:  ${user.fullName}');
-      print('Email: ${user.email}');
-      print('Password: ${user.password}');
-      // إضافة المزيد من المعالجة هنا
+  void _submit() async {
+    if (_formKey.currentState!.validate() && termsAccepted) {
+      try {
+        // إنشاء الحساب في Firebase Authentication
+        UserCredential? userCredential = await _authRepository.signUp(user.email, user.password, user.fullName!);
+
+        // إضافة بيانات المستخدم إلى Firestore
+        await _authRepository.addUserToFirestore(userCredential!, user.fullName!, user.email);
+
+        print('تم إنشاء الحساب بنجاح');
+
+        // الانتقال إلى شاشة تسجيل الدخول بعد إنشاء الحساب
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      } on FirebaseAuthException catch (e) {
+        print('فشل إنشاء الحساب: ${e.message}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('فشل إنشاء الحساب: ${e.message}'),
+          ),
+        );
+      } catch (e) {
+        print('حدث خطأ غير متوقع: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('حدث خطأ غير متوقع: $e'),
+          ),
+        );
+      }
     }
   }
 
@@ -99,10 +125,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         }
                         return null;
                       },
-
-    onChanged: (value) {
-    user.fullName = value;
-    },
+                      onChanged: (value) {
+                        user.fullName = value;
+                      },
                     ),
                     const SizedBox(height: 16),
 
@@ -281,7 +306,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             context,
                             MaterialPageRoute(builder: (context) => LoginScreen()),
                           );
-                          // هنا يمكنك الانتقال إلى شاشة تسجيل الدخول
                         },
                         child: const Text(
                           "لديك حساب بالفعل؟ سجل دخولك",

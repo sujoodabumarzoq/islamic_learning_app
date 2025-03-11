@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:islamic_learning_app/Model/UserModel.dart';
+import 'package:islamic_learning_app/repositories/auth_repository.dart';
+import 'package:islamic_learning_app/screen/Features/home/HomePage.dart';
 import 'SignUpScreen.dart'; // تأكد من استيراد صفحة إنشاء الحساب
 
 class LoginScreen extends StatefulWidget {
@@ -11,16 +14,29 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+  final AuthRepository _authRepository = AuthRepository();
 
   bool passwordVisible = false;
-  UserModel user = UserModel( email: '', password: '');
+  UserModel user = UserModel(email: '', password: '');
 
-  void _submit() {
+  void _submit() async {
     if (_formKey.currentState!.validate()) {
-      // هنا يمكنك إضافة الكود لتسجيل الدخول
-      print('Email: ${user.email}');
-      print('Password: ${user.password}');
-      // إضافة المزيد من المعالجة هنا
+      try {
+        UserCredential? userCredential = await _authRepository.signIn(user.email, user.password);
+        if (userCredential != null) {
+          print("تم تسجيل الدخول بنجاح");
+          // يمكنك إضافة الانتقال إلى الشاشة الرئيسية هنا
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+
+        }
+      } on FirebaseAuthException catch (e) {
+        print("فشل تسجيل الدخول: ${e.message}");
+      } catch (e) {
+        print("حدث خطأ غير متوقع: $e");
+      }
     }
   }
 
@@ -68,7 +84,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 20),
                     Align(
                       alignment: Alignment.center,
-
                       child: const Text(
                         "تسجيل الدخول",
                         style: TextStyle(
@@ -219,8 +234,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-
-                    // زر الرجوع
                   ],
                 ),
               ),

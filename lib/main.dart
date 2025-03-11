@@ -1,8 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:islamic_learning_app/firebase_options.dart';
 import 'package:islamic_learning_app/screen/Features/splash/splash%20_screen.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // تأكد من تهيئة Flutter
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform, // تأكد من استيراد DefaultFirebaseOptions
+  );  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

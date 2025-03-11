@@ -43,9 +43,14 @@ dependencies:
   image_picker: ^0.8.6
 
   store_redirect: ^2.0.4
+ 
 
   shared_preferences: ^2.2.2
   url_launcher: ^6.1.12
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.16.0
+  cloud_firestore: ^4.14.0
+  firebase_core_web: ^2.10.0
 
 
 
